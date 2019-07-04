@@ -1,0 +1,6 @@
+select 
+BaseManagedEntityId,
+DisplayName,
+SerialNumber_C8CF2E89_7A83_1C26_0AD0_887DF9140D5A as [SerialNumber],
+AssetTag_A3A8959C_F361_A6A8_B242_0013702442B3 as [AssetTag]
+from ServiceManager.dbo.MT_Cireson$AssetManagement$HardwareAsset
