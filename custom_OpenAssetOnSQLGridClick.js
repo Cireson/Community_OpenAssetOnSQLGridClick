@@ -1,7 +1,7 @@
 /* ----------------------------------------------- */
 /* --------- Open Asset on SQL Grid Click -------- */
 /* ----------------------------------------------- */
-// v9.3.4.v2
+// v10.5.1
 // Contributors: Joivan, Shane White
 // Description: If a dashboard grid view has a column that contains the name "BaseManagedEntityId" or "ArticleId", and that column has the Entity ID (or Article ID), 
 //				then this script makes the row clickable, going to the asset object (hardware, location, organization, Dynamic Data/Business service, custom class, KB Article, etc) in a new tab.
@@ -311,12 +311,15 @@ $(document).ready(function () {
 					strThisFinalUrl = strBaseObjectUrlOnSqlClick + thisKendoDataItem.ArticleId;
 				}
 				
+				// We need to find the first column that is not the Id to put back in the title of the column into the href
+				var columnNameToDisplay = kendoGrid.columns[1].title;
+				
 				// Wipe out text so it dos not show double
 				$(htmlAnchorsToAddSearchUrl[j]).text("");
 				// Add this class to get the nice formatting in the grid
 				$(htmlAnchorsToAddSearchUrl[j]).addClass("grid-highlight-column");
 				// Add in the href element
-				$(htmlAnchorsToAddSearchUrl[j]).append("<a href=\"" + strThisFinalUrl + "\">" + thisKendoDataItem.DisplayName + "</a>");
+				$(htmlAnchorsToAddSearchUrl[j]).append("<a href=\"" + strThisFinalUrl + "\">" + thisKendoDataItem[columnNameToDisplay] + "</a>");
 			}
 		}
 		
