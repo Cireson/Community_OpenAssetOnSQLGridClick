@@ -312,7 +312,7 @@ $(document).ready(function () {
 				}
 				
 				// We need to find the first column that is not the Id to put back in the title of the column into the href
-				var columnNameToDisplay = kendoGrid.columns[1].title;
+				var columnNameToDisplay = kendoGrid.columns[1].field;
 				
 				// Wipe out text so it dos not show double
 				$(htmlAnchorsToAddSearchUrl[j]).text("");
