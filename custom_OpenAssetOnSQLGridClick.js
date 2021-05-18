@@ -2,7 +2,7 @@
 /* --------- Open Asset on SQL Grid Click -------- */
 /* ----------------------------------------------- */
 // v9.3.4.v2
-// Contributors: Joivan
+// Contributors: Joivan, Shane White
 // Description: If a dashboard grid view has a column that contains the name "BaseManagedEntityId" or "ArticleId", and that column has the Entity ID (or Article ID), 
 //				then this script makes the row clickable, going to the asset object (hardware, location, organization, Dynamic Data/Business service, custom class, KB Article, etc) in a new tab.
 
@@ -293,21 +293,32 @@ $(document).ready(function () {
 			return;
 		}
 		
-		var allHtmlAnchorsWithSearchUrl = htmlElement.find("tr").find("a[href^='/Search']")// .attr("href", "#");
-		for(var i = 0; i < allHtmlAnchorsWithSearchUrl.length; i++) {
-			//Update the a tag with the URL and baseId.
-			var thisTr = $(allHtmlAnchorsWithSearchUrl[i]).closest("tr");
-			var thisKendoDataItem = kendoGrid.dataItem(thisTr);
-			
-			var strThisFinalUrl = strBaseObjectUrlOnSqlClick + thisKendoDataItem.BaseManagedEntityId;
-			if (thisKendoDataItem.BaseManagedEntityId == null) {
-				strThisFinalUrl = strBaseObjectUrlOnSqlClick + thisKendoDataItem.ArticleId;
-			}
-			
-			$(allHtmlAnchorsWithSearchUrl[i]).attr("href", strThisFinalUrl);
-			$(allHtmlAnchorsWithSearchUrl[i]).attr("target", "_blank");
-		}
+		// Shane White - Changed whole section of code here due to change in the source code - 18/08/21
+		// There is no longer a href element in the grid by default so we have to create it
+		var htmlElementRows = $(htmlElement.find("tr"));
 		
+		for(var i = 0; i < htmlElementRows.length; i++) {
+			
+			var htmlAnchorsToAddSearchUrl = $($(htmlElementRows[i]).find("td")[1]);
+			
+			for(var j = 0; j < htmlAnchorsToAddSearchUrl.length; j++) {
+				//Update the a tag with the URL and baseId.
+				var thisTr = $(htmlAnchorsToAddSearchUrl[j]).closest("tr");
+				var thisKendoDataItem = kendoGrid.dataItem(thisTr);
+				
+				var strThisFinalUrl = strBaseObjectUrlOnSqlClick + thisKendoDataItem.BaseManagedEntityId;
+				if (thisKendoDataItem.BaseManagedEntityId == null) {
+					strThisFinalUrl = strBaseObjectUrlOnSqlClick + thisKendoDataItem.ArticleId;
+				}
+				
+				// Wipe out text so it dos not show double
+				$(htmlAnchorsToAddSearchUrl[j]).text("");
+				// Add this class to get the nice formatting in the grid
+				$(htmlAnchorsToAddSearchUrl[j]).addClass("grid-highlight-column");
+				// Add in the href element
+				$(htmlAnchorsToAddSearchUrl[j]).append("<a href=\"" + strThisFinalUrl + "\">" + thisKendoDataItem.DisplayName + "</a>");
+			}
+		}
 		
 		var gridElement = $(htmlElement);
 		gridElement.find("td").off("click");
